@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+}
+
+model Patient {
+  id                String             @id @default(cuid())
+  name              String
+  gender            String
+  age               Int
+  profilePicture    String
+  dateOfBirth       String
+  phoneNumber       String
+  emergencyContact  String
+  insuranceType     String
+  diagnosisHistory  DiagnosisHistory[]
+  diagnosticList    DiagnosticItem[]
+  labResults        LabResult[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model DiagnosisHistory {
+  id               String  @id @default(cuid())
+  patientId        String
+  patient          Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  month            String
+  year             Int
+  systolicValue    Int
+  systolicLevel    String
+  diastolicValue   Int
+  diastolicLevel   String
+  heartRateValue   Int
+  heartRateLevel   String
+  respiratoryValue Int
+  respiratoryLevel String
+  temperatureValue Float
+  temperatureLevel String
+}
+
+model DiagnosticItem {
+  id          String  @id @default(cuid())
+  patientId   String
+  patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  status      String
+}
+
+model LabResult {
+  id        String  @id @default(cuid())
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  name      String
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  invoiceId String   @unique
+  patient   String
+  service   String
+  date      String
+  amount    String
+  status    String
+  method    String
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  sender    String
+  receiver  String
+  content   String
+  time      String
+  isMe      Boolean
+  createdAt DateTime @default(now())
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  patient   String
+  service   String
+  date      String
+  time      String
+  status    String
+  createdAt DateTime @default(now())
+}
