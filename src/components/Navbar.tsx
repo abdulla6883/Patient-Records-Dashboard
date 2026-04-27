@@ -31,7 +31,10 @@ const Navbar = () => {
 
   const userName = session?.user?.name || "Dr. Jose Simmons";
   const userImage = session?.user?.image || "/dr-jose-simmons.png";
-  const userEmail = session?.user?.email || "General Practitioner";
+  
+  const gender = (session?.user as any)?.gender || "Male";
+  const dob = (session?.user as any)?.dateOfBirth;
+  const age = dob ? new Date().getFullYear() - new Date(dob).getFullYear() : 35;
 
   return (
     <nav className="h-[60px] lg:h-[72px] bg-white/80 backdrop-blur-2xl border-b border-[#EDEDED] fixed top-0 left-0 right-0 z-50 transition-all duration-500 shadow-sm px-4">
@@ -98,7 +101,7 @@ const Navbar = () => {
                   <ChevronDown size={10} className="text-[#707070]" />
                 </div>
                 <span className="text-[8px] xl:text-[9px] text-[#707070] font-bold uppercase tracking-wider truncate max-w-[120px]">
-                  {(session?.user as any)?.specialty || "General Practitioner"}
+                  {gender}, {age} Years Old
                 </span>
               </div>
             </div>

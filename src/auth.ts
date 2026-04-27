@@ -33,7 +33,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id, 
           email: user.email, 
           name: user.name, 
-          specialty: user.specialty 
+          gender: user.gender,
+          dateOfBirth: user.dateOfBirth
         };
       },
     }),
@@ -45,13 +46,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         const u = user as any;
-        token.specialty = u.specialty;
+        token.gender = u.gender;
+        token.dateOfBirth = u.dateOfBirth;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).specialty = token.specialty;
+        (session.user as any).gender = token.gender;
+        (session.user as any).dateOfBirth = token.dateOfBirth;
       }
       return session;
     },

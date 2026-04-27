@@ -13,7 +13,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [specialty, setSpecialty] = useState("General Practitioner");
+  const [gender, setGender] = useState("Male");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -48,7 +49,7 @@ export default function LoginPage() {
         const res = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, firstName, lastName, specialty }),
+          body: JSON.stringify({ email, password, firstName, lastName, gender, dateOfBirth }),
         });
 
         const data = await res.json();
@@ -203,14 +204,27 @@ export default function LoginPage() {
                         required={!isLogin}
                       />
                     </div>
-                    <div className="col-span-2 space-y-2">
-                      <label className="text-xs font-black text-[#072635] uppercase tracking-widest ml-1">Specialty</label>
-                      <input
-                        type="text"
-                        value={specialty}
-                        onChange={(e) => setSpecialty(e.target.value)}
+                    <div className="space-y-2">
+                      <label className="text-xs font-black text-[#072635] uppercase tracking-widest ml-1">Gender</label>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
                         className="w-full px-4 py-4 bg-[#F6F7F8] border-none rounded-2xl focus:ring-2 focus:ring-[#01F0D0] outline-none transition-all font-semibold text-[#072635]"
-                        placeholder="e.g. Cardiologist"
+                        required={!isLogin}
+                      >
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-black text-[#072635] uppercase tracking-widest ml-1">Date of Birth</label>
+                      <input
+                        type="date"
+                        value={dateOfBirth}
+                        onChange={(e) => setDateOfBirth(e.target.value)}
+                        className="w-full px-4 py-4 bg-[#F6F7F8] border-none rounded-2xl focus:ring-2 focus:ring-[#01F0D0] outline-none transition-all font-semibold text-[#072635]"
+                        required={!isLogin}
                       />
                     </div>
                   </div>

@@ -12,10 +12,11 @@ model User {
   email     String  @unique
   password  String?
   name      String?
-  image     String?
-  firstName String?
-  lastName  String?
-  specialty String?
+  image       String?
+  firstName   String?
+  lastName    String?
+  gender      String?
+  dateOfBirth String?
 }
 
 model Patient {
