@@ -7,8 +7,24 @@ import BloodPressureChart from '@/components/BloodPressureChart';
 import HealthMetricCard from '@/components/HealthMetricCard';
 import PatientDetail from '@/components/PatientDetail';
 import { LayoutGrid, Activity, ClipboardList } from 'lucide-react';
+import AddPatientModal from '@/components/AddPatientModal';
+import { api } from '@/services/api';
+
 export default function DashboardPage() {
+
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const handleAddPatient = async (data: any) => {
+    try {
+      await api.createPatient(data);
+      // Trigger a refresh of the list or just close
+      setIsAddModalOpen(false);
+      window.location.reload(); // Quick way to refresh for now
+    } catch (error) {
+      console.error('Failed to create patient:', error);
+    }
+  };
 
   const latestStats = selectedPatient?.diagnosis_history?.[0] || {
     respiratory_rate: { value: 0, levels: 'N/A' },
@@ -29,6 +45,7 @@ export default function DashboardPage() {
           <PatientList 
             onSelectPatient={setSelectedPatient} 
             selectedPatientId={selectedPatient?.id} 
+            onOpenAddModal={() => setIsAddModalOpen(true)}
           />
         </motion.div>
 
@@ -41,7 +58,7 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="card p-10 lg:p-20 flex flex-col items-center justify-center text-center space-y-6 bg-white/50 backdrop-blur-sm border-dashed border-2 border-gray-200"
+                className="card p-10 lg:p-20 flex flex-col items-center justify-center text-center space-y-6 bg-white border-dashed border-2 border-gray-200"
               >
                 <div className="w-16 h-16 lg:w-20 lg:h-20 bg-[#01F0D0]/10 rounded-full flex items-center justify-center text-[#01F0D0]">
                   <LayoutGrid size={32} className="lg:hidden" />
@@ -147,19 +164,17 @@ export default function DashboardPage() {
         <div className="md:col-span-12 lg:col-span-3">
           {selectedPatient && (
             <PatientDetail 
-              patient={{
-                ...selectedPatient,
-                profile_picture: selectedPatient.profilePicture,
-                date_of_birth: selectedPatient.dateOfBirth,
-                phone_number: selectedPatient.phoneNumber,
-                emergency_contact: selectedPatient.emergencyContact,
-                insurance_type: selectedPatient.insuranceType,
-                lab_results: selectedPatient.labResults?.map((l: any) => l.name) || []
-              }} 
+              key={selectedPatient.id}
+              patient={selectedPatient} 
             />
           )}
         </div>
       </div>
+      <AddPatientModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+        onAdd={handleAddPatient} 
+      />
     </div>
   );
 }

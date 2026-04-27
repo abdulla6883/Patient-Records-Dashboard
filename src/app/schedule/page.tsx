@@ -69,7 +69,7 @@ export default function SchedulePage() {
                 </button>
               </div>
               <button className="flex items-center space-x-2 bg-[#01F0D0] px-4 lg:px-6 py-2.5 rounded-full text-xs lg:text-sm font-extrabold text-[#072635] shadow-sm hover:shadow-[#01F0D0]/40 transition-all">
-                <Plus size={16} lgSize={18} strokeWidth={3} />
+                <Plus size={18} strokeWidth={3} />
                 <span className="hidden xs:inline">New Appointment</span>
                 <span className="xs:hidden">New</span>
               </button>

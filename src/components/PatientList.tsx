@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MoreHorizontal, Search, Plus, Trash2, UserPlus, Users, Heart, Activity } from 'lucide-react';
-import AddPatientModal from './AddPatientModal';
+import { Search, MoreVertical, Plus, Trash2, UserPlus, Users, Heart, Activity, Loader2 } from 'lucide-react';
+import { api } from '@/services/api';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Patient {
   id: string;
@@ -14,22 +15,25 @@ interface Patient {
   profilePicture: string;
 }
 
-const PatientList = ({ onSelectPatient, selectedPatientId }: { 
+const PatientList = ({ onSelectPatient, selectedPatientId, onOpenAddModal }: { 
   onSelectPatient: (patient: any) => void,
-  selectedPatientId?: string 
+  selectedPatientId?: string,
+  onOpenAddModal: () => void
 }) => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlPatientId = searchParams.get('id');
 
   const fetchPatients = async () => {
     try {
       console.log("Fetching patients from /api/patients...");
-      const res = await fetch('/api/patients');
-      console.log(`Response status: ${res.status}`);
+      const res = await fetch('/api/patients', { cache: 'no-store' });
       
       if (res.status === 401) {
         window.location.href = '/login';
@@ -42,16 +46,21 @@ const PatientList = ({ onSelectPatient, selectedPatientId }: {
       }
       
       const data = await res.json();
-      console.log("Received data type:", typeof data, "is array:", Array.isArray(data));
-      console.log("Data content:", JSON.stringify(data));
 
       if (Array.isArray(data)) {
         setPatients(data);
-        if (data.length > 0 && !selectedPatientId) {
-          onSelectPatient(data[0]);
+        
+        // Handle initial selection
+        if (data.length > 0) {
+          const patientToSelect = urlPatientId 
+            ? data.find((p: any) => p.id === urlPatientId) || data[0]
+            : data[0];
+          
+          if (patientToSelect && (!selectedPatientId || selectedPatientId !== patientToSelect.id)) {
+            onSelectPatient(patientToSelect);
+          }
         }
       } else {
-        console.error("API did not return an array. Data:", data);
         setPatients([]);
       }
     } catch (err) {
@@ -62,31 +71,42 @@ const PatientList = ({ onSelectPatient, selectedPatientId }: {
     }
   };
 
+  const handlePatientClick = (patient: any) => {
+    onSelectPatient(patient);
+    router.push(`/?id=${patient.id}`, { scroll: false });
+  };
+
   useEffect(() => {
     setHasMounted(true);
     fetchPatients();
   }, []);
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
     e.stopPropagation();
-    if (!confirm('Are you sure you want to delete this patient record?')) return;
+    
+    if (!window.confirm('Are you sure you want to delete this patient record?')) return;
 
     try {
-      console.log(`Deleting patient ${id}...`);
+      console.log(`[UI] Deleting patient ${id}...`);
       const res = await fetch(`/api/patients/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        console.log("Delete successful");
-        setPatients(prev => prev.filter(p => p.id !== id));
-        if (selectedPatientId === id) {
-          onSelectPatient(null);
-        }
-      } else {
+      
+      if (!res.ok) {
         const errData = await res.json();
-        alert(`Failed to delete: ${errData.error || 'Unknown error'}`);
+        throw new Error(errData.error || errData.details || 'Failed to delete');
       }
-    } catch (err) {
-      console.error("Delete request failed:", err);
-      alert("Network error while deleting patient.");
+      
+      console.log("[UI] Delete successful");
+      setPatients(prev => prev.filter(p => p.id !== id));
+      
+      if (selectedPatientId === id) {
+        onSelectPatient(null);
+        router.push('/', { scroll: false });
+      }
+      
+    } catch (err: any) {
+      console.error("[UI] Delete request failed:", err);
+      alert(`Failed to delete patient: ${err.response?.data?.error || err.message || 'Unknown error'}`);
     }
   };
 
@@ -137,7 +157,7 @@ const PatientList = ({ onSelectPatient, selectedPatientId }: {
             <motion.button 
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsAddModalOpen(true)} 
+              onClick={onOpenAddModal} 
               className="w-10 h-10 flex items-center justify-center bg-[#01F0D0] rounded-full transition-all text-[#072635] shadow-sm hover:shadow-[#01F0D0]/40"
               title="Add New Patient"
             >
@@ -196,7 +216,7 @@ const PatientList = ({ onSelectPatient, selectedPatientId }: {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 key={patient.id}
-                onClick={() => onSelectPatient(patient)}
+                onClick={() => handlePatientClick(patient)}
                 className={`flex items-center justify-between px-6 py-4 cursor-pointer transition-all border-b border-[#F6F7F8] group relative ${
                   selectedPatientId === patient.id ? 'bg-[#D8FCF7]' : 'hover:bg-gray-50'
                 }`}
@@ -224,15 +244,15 @@ const PatientList = ({ onSelectPatient, selectedPatientId }: {
                   </div>
                 </div>
                 <div className={`flex items-center space-x-2 transition-all duration-300 ${patient.id === selectedPatientId ? 'opacity-100' : 'opacity-100 lg:opacity-0 lg:group-hover:opacity-100'}`}>
-                  <motion.button 
-                    whileHover={{ scale: 1.2, color: '#ef4444' }}
+                  <button 
                     onClick={(e) => handleDelete(e, patient.id)}
-                    className="p-2 text-gray-400"
+                    className="p-2 text-gray-400 hover:text-red-500 transition-colors z-30"
                     title="Delete Record"
+                    type="button"
                   >
                     <Trash2 size={16} />
-                  </motion.button>
-                  <MoreHorizontal size={18} className="text-[#072635]" />
+                  </button>
+                  <MoreVertical size={18} className="text-[#072635]" />
                 </div>
               </motion.div>
             ))}
@@ -240,11 +260,6 @@ const PatientList = ({ onSelectPatient, selectedPatientId }: {
         )}
       </div>
 
-      <AddPatientModal 
-        isOpen={isAddModalOpen} 
-        onClose={() => setIsAddModalOpen(false)} 
-        onAdd={handleAddPatient} 
-      />
     </div>
   );
 };

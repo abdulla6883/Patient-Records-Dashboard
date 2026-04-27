@@ -4,6 +4,16 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
+  // Clear existing data
+  await prisma.appointment.deleteMany();
+  await prisma.message.deleteMany();
+  await prisma.transaction.deleteMany();
+  await prisma.labResult.deleteMany();
+  await prisma.diagnosticItem.deleteMany();
+  await prisma.diagnosisHistory.deleteMany();
+  await prisma.patient.deleteMany();
+  // We keep users or upsert them
+
   // Create a default user
   const hashedPassword = await bcrypt.hash('password123', 10);
   await prisma.user.upsert({

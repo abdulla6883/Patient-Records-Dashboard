@@ -49,11 +49,11 @@ export default function TransactionsPage() {
           </div>
           <div className="flex items-center space-x-2 lg:space-x-3">
             <button className="flex-1 lg:flex-none flex items-center justify-center space-x-2 px-4 lg:px-6 py-2.5 lg:py-3 bg-white border border-[#EDEDED] rounded-full text-xs lg:text-sm font-bold text-[#072635] hover:bg-gray-50 transition-all">
-              <Download size={16} lgSize={18} />
+              <Download size={18} />
               <span>Export</span>
             </button>
             <button className="flex-1 lg:flex-none flex items-center justify-center space-x-2 px-4 lg:px-6 py-2.5 lg:py-3 bg-[#01F0D0] rounded-full text-xs lg:text-sm font-extrabold text-[#072635] shadow-sm hover:shadow-[#01F0D0]/40 transition-all">
-              <CreditCard size={16} lgSize={18} />
+              <CreditCard size={18} />
               <span>New Invoice</span>
             </button>
           </div>
@@ -61,9 +61,9 @@ export default function TransactionsPage() {
 
         {/* Finance Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-          <SummaryCard title="Total Revenue" value="$42,580" change="+12.5%" icon={<Wallet size={20} lgSize={24} />} color="#E0F3FA" />
-          <SummaryCard title="Incoming" value="$8,240" change="+4.2%" icon={<ArrowDownLeft size={20} lgSize={24} />} color="#D8FCF7" />
-          <SummaryCard title="Outgoing" value="$2,150" change="-2.1%" icon={<ArrowUpRight size={20} lgSize={24} />} color="#FFE6E9" className="sm:col-span-2 lg:col-span-1" />
+          <SummaryCard title="Total Revenue" value="$42,580" change="+12.5%" icon={<Wallet size={24} />} color="#E0F3FA" />
+          <SummaryCard title="Incoming" value="$8,240" change="+4.2%" icon={<ArrowDownLeft size={24} />} color="#D8FCF7" />
+          <SummaryCard title="Outgoing" value="$2,150" change="-2.1%" icon={<ArrowUpRight size={24} />} color="#FFE6E9" className="sm:col-span-2 lg:col-span-1" />
         </div>
 
         {/* Transactions Table */}
