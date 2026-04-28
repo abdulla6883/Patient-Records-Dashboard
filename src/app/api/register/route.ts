@@ -4,10 +4,10 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { email, password, firstName, lastName, gender, dateOfBirth, otp } = await req.json();
+    const { email, password, firstName, lastName, gender, dateOfBirth } = await req.json();
 
-    if (!email || !password || !firstName || !lastName || !gender || !dateOfBirth || !otp) {
-      return NextResponse.json({ error: "Missing required fields or OTP" }, { status: 400 });
+    if (!email || !password || !firstName || !lastName || !gender || !dateOfBirth) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     const existingUser = await prisma.user.findUnique({
@@ -16,24 +16,6 @@ export async function POST(req: Request) {
 
     if (existingUser) {
       return NextResponse.json({ error: "User already exists" }, { status: 400 });
-    }
-
-    // Verify OTP
-    const verificationRecord = await prisma.verificationToken.findFirst({
-      where: { email },
-      orderBy: { createdAt: 'desc' }
-    });
-
-    if (!verificationRecord) {
-      return NextResponse.json({ error: "No OTP requested for this email" }, { status: 400 });
-    }
-
-    if (verificationRecord.token !== otp) {
-      return NextResponse.json({ error: "Invalid OTP" }, { status: 400 });
-    }
-
-    if (verificationRecord.expires < new Date()) {
-      return NextResponse.json({ error: "OTP has expired" }, { status: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,9 +31,6 @@ export async function POST(req: Request) {
         dateOfBirth
       },
     });
-
-    // Delete used OTP
-    await prisma.verificationToken.deleteMany({ where: { email } });
 
     return NextResponse.json({ success: true, user: { email: user.email, name: user.name } });
   } catch (error) {
