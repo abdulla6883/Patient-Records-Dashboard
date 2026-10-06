@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#E5E7EB"/>
+  
+  <!-- Head -->
+  <circle cx="100" cy="60" r="32" fill="#C5CAD1"/>
+  
+  <!-- Hair (longer style for female) -->
+  <path d="M 68 60 Q 68 30 100 28 Q 132 30 132 60 Q 132 75 125 85 L 75 85 Q 68 75 68 60 Z" fill="#C5CAD1"/>
+  
+  <!-- Shoulders and body -->
+  <path d="M 55 90 Q 55 130 70 165 L 130 165 Q 145 130 145 90 L 145 90 Q 100 90 55 90 Z" fill="#C5CAD1"/>
+  
+  <!-- Neck connector -->
+  <ellipse cx="100" cy="90" rx="24" ry="10" fill="#C5CAD1"/>
+</svg>

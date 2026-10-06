@@ -162,19 +162,19 @@ export default function SettingsPage() {
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 lg:p-10 mb-8">
         <div className="flex items-center space-x-3 mb-8 pb-6 border-b border-gray-100">
           <div className="relative group">
-            <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 overflow-hidden relative">
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden relative border-2 border-gray-200">
               {imagePreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img 
-                  src={gender.toLowerCase() === "female" ? `https://avatar.iran.liara.run/public/girl?username=${encodeURIComponent(firstName + " " + lastName)}` : `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent(firstName + " " + lastName)}`} 
+                  src={gender.toLowerCase() === "female" ? "/images/avatar-female.svg" : "/images/avatar-male.svg"} 
                   alt="Default Profile" 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-cover p-2" 
                 />
               )}
-              <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+              <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity rounded-2xl">
                 <Camera size={20} className="text-white" />
                 <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
               </label>

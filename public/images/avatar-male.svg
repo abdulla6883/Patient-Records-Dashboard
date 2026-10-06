@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#E5E7EB"/>
+  
+  <!-- Head -->
+  <circle cx="100" cy="70" r="35" fill="#C5CAD1"/>
+  
+  <!-- Shoulders and body -->
+  <path d="M 60 105 Q 60 140 75 165 L 125 165 Q 140 140 140 105 L 140 105 Q 140 105 100 105 Q 60 105 60 105 Z" fill="#C5CAD1"/>
+  
+  <!-- Neck connector -->
+  <ellipse cx="100" cy="105" rx="22" ry="8" fill="#C5CAD1"/>
+</svg>

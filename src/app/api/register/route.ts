@@ -32,6 +32,11 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Assign default profile image based on gender
+    const defaultImage = gender === "Female" 
+      ? "/images/avatar-female.svg" 
+      : "/images/avatar-male.svg";
+
     const user = await prisma.user.create({
       data: {
         email,
@@ -40,7 +45,8 @@ export async function POST(req: Request) {
         lastName,
         name: `${firstName} ${lastName}`,
         gender,
-        dateOfBirth
+        dateOfBirth,
+        image: defaultImage
       },
     });
 
