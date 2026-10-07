@@ -1,14 +1,13 @@
 "use client";
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Wind, Thermometer, Heart, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface HealthMetricCardProps {
   title: string;
   value: string;
   status: string;
-  icon: string; // Keep for compatibility but we'll use title to switch icons
+  icon: string;
   bgColor: string;
 }
 
@@ -29,17 +28,14 @@ const HealthMetricCard = ({ title, value, status, bgColor }: HealthMetricCardPro
   const isNormal = status.toLowerCase().includes('normal');
 
   return (
-    <motion.div 
-      whileHover={{ scale: 1.05, translateY: -5 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="p-5 rounded-3xl flex flex-col space-y-4 shadow-sm hover:shadow-md transition-all duration-300"
+    <div
+      className="p-5 rounded-3xl flex flex-col space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
       style={{ backgroundColor: bgColor }}
     >
       <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
         {getIcon()}
       </div>
-      
+
       <div className="flex flex-col">
         <span className="text-sm font-medium text-[#072635] opacity-80">{title}</span>
         <span className="text-3xl font-extrabold text-[#072635] mt-1">{value}</span>
@@ -59,7 +55,7 @@ const HealthMetricCard = ({ title, value, status, bgColor }: HealthMetricCardPro
           </>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
