@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,42 +13,26 @@
   --background-end-rgb: 246, 246, 246;
 }
 
-/* Lenis Recommended CSS */
-html.lenis, html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
-}
-
 body {
-  @apply text-[#072635] bg-[#F6F6F6] font-[Manrope] overflow-x-hidden;
+  font-family: 'Manrope', sans-serif;
+  @apply text-[#072635] bg-[#F6F6F6] overflow-x-hidden antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Consistent card system */
 .card {
-  @apply bg-white rounded-[32px] overflow-hidden shadow-sm border border-[#F6F7F8];
+  @apply bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100;
 }
 
-.glass-effect {
-  @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
-}
-
+/* Scrollbar */
 .custom-scrollbar {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -56,20 +40,11 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-[#E3E4E6] rounded-full;
+  @apply bg-gray-200 rounded-full;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   @apply bg-[#01F0D0];
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -79,4 +54,14 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Smooth focus rings */
+:focus-visible {
+  @apply outline-none ring-2 ring-[#01F0D0]/40 ring-offset-2;
+}
+
+/* Better selection */
+::selection {
+  @apply bg-[#01F0D0] text-[#072635];
 }
