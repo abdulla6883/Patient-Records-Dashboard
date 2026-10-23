@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 
 import React from 'react';
 import Image from 'next/image';
@@ -139,7 +140,7 @@ export default function OverviewPage() {
                   className="w-12 h-12 rounded-xl flex items-center justify-center text-[#072635] group-hover:scale-110 transition-transform"
                   style={{ backgroundColor: stat.color }}
                 >
-                  {React.cloneElement(stat.icon as React.ReactElement, { size: 20 })}
+                  {React.cloneElement(stat.icon as React.ReactElement, { size: 20 } as any)}
                 </div>
                 <div className={`flex items-center space-x-1 text-xs font-bold px-2.5 py-1 rounded-full ${
                   stat.change.startsWith('+') ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'
