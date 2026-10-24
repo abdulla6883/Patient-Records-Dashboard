@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
+import { put } from "@vercel/blob";
+import { randomUUID } from "node:crypto";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-
-import fs from 'fs';
-import path from 'path';
 
 export async function GET(req: Request) {
   try {
@@ -44,24 +43,27 @@ export async function PUT(req: Request) {
 
     const { firstName, lastName, gender, dateOfBirth, image } = await req.json();
 
-    let imagePath = undefined;
+    let imagePath: string | undefined;
 
-    if (image && image.startsWith('data:image/')) {
-      const matches = image.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
-      if (matches && matches.length === 3) {
-        const extension = matches[1] === 'jpeg' ? 'jpg' : matches[1];
-        const buffer = Buffer.from(matches[2], 'base64');
-        const filename = `profile-${session.user.id || Date.now()}-${Date.now()}.${extension}`;
-        
-        const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-        if (!fs.existsSync(uploadsDir)) {
-          fs.mkdirSync(uploadsDir, { recursive: true });
-        }
-        
-        const filepath = path.join(uploadsDir, filename);
-        fs.writeFileSync(filepath, buffer);
-        imagePath = `/uploads/${filename}`;
+    if (image?.startsWith("data:image/")) {
+      const matches = image.match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/);
+      if (!matches) {
+        return NextResponse.json({ error: "Unsupported image format" }, { status: 400 });
       }
+
+      const [, extension, encodedImage] = matches;
+      const buffer = Buffer.from(encodedImage, "base64");
+      if (buffer.length > 3 * 1024 * 1024) {
+        return NextResponse.json({ error: "Image must be 3 MB or smaller" }, { status: 413 });
+      }
+
+      const contentType = `image/${extension}`;
+      const blob = await put(
+        `profiles/${session.user.id || "user"}-${randomUUID()}.${extension}`,
+        buffer,
+        { access: "public", contentType },
+      );
+      imagePath = blob.url;
     }
 
     const dataToUpdate: any = {

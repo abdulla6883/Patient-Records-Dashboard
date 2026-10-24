@@ -1,6 +1,6 @@
 # 🏥 Medical Dashboard - Next.js Fullstack
 
-A premium, modern medical dashboard built with **Next.js 15**, **Prisma**, and **Tailwind CSS**. This application provides a comprehensive patient management system with real-time clinical data visualization, editing capabilities, and a responsive design.
+A premium, modern medical dashboard built with **Next.js 16**, **Prisma**, and **Tailwind CSS**. This application provides a comprehensive patient management system with real-time clinical data visualization, editing capabilities, and a responsive design.
 
 ---
 
@@ -17,8 +17,9 @@ A premium, modern medical dashboard built with **Next.js 15**, **Prisma**, and *
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
-- **Database**: SQLite (Local) with Prisma ORM
+- **Framework**: Next.js 16 (App Router)
+- **Database**: PostgreSQL (Neon) with Prisma ORM
+- **Uploads**: Vercel Blob
 - **Styling**: Tailwind CSS 4
 - **State/Animations**: Framer Motion & React Hooks
 - **Icons**: Lucide React
@@ -31,7 +32,7 @@ A premium, modern medical dashboard built with **Next.js 15**, **Prisma**, and *
 
 ### 1. Prerequisites
 
-- **Node.js**: v18.17 or higher
+- **Node.js**: v20.9 or higher
 - **npm**: v9 or higher
 
 ### 2. Installation
@@ -43,20 +44,19 @@ Clone the repository and install the dependencies:
 npm install
 ```
 
-### 3. Database Setup
+### 3. Environment and Database Setup
 
-The project uses SQLite for ease of local development. Initialize the database and seed it with initial patient data:
+Copy `.env.example` to `.env`. Create a Neon PostgreSQL database and set `DATABASE_URL` to its pooled connection string and `DIRECT_URL` to its direct connection string. Set `AUTH_SECRET` to a generated secret, and provide Google OAuth and SMTP credentials for those features.
 
 ```bash
-# Generate Prisma Client
-npx prisma generate
+# Apply database migrations
+npm run db:deploy
 
-# Push schema to local SQLite database
-npx prisma db push
-
-# Seed the database with initial data
+# Optional local/demo seed only. It creates a known demo password; never run in production.
 npx prisma db seed
 ```
+
+For Vercel, connect the Neon database and a **public** Vercel Blob store to the project. Add the environment variables from `.env.example`; the connected Blob store supplies Vercel's runtime credentials. Do not seed production with the demo credentials.
 
 ### 4. Running the Development Server
 
@@ -68,9 +68,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🔐 Login Credentials
+## 🔐 Local Demo Login
 
-Use the following default credentials to access the dashboard:
+The optional demo seed creates these local-only credentials. Do not use them in production:
 
 | Field    | Value                  |
 | -------- | ---------------------- |

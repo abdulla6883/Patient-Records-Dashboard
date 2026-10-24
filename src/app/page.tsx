@@ -1,6 +1,6 @@
-import { Suspense } from "react";
 "use client";
 
+import { Suspense } from "react";
 import { useState } from 'react';
 import PatientList from '@/components/PatientList';
 import BloodPressureChart from '@/components/BloodPressureChart';
