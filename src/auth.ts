@@ -112,6 +112,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         (session.user as any).gender = token.gender;
         (session.user as any).dateOfBirth = token.dateOfBirth;
         if (token.picture) session.user.image = token.picture;
+      if (!session.user.image) {
+        const gender = (token as any).gender || "";
+        const name = session.user.name || session.user.email || "";
+        if (gender?.toLowerCase().includes("female") || gender?.toLowerCase().includes("girl")) session.user.image = "https://api.dicebear.com/9.x/avataaars/svg?seed=" + encodeURIComponent(name) + "&backgroundColor=ffdfbf";
+        else if (gender?.toLowerCase().includes("male") || gender?.toLowerCase().includes("boy")) session.user.image = "https://api.dicebear.com/9.x/avataaars/svg?seed=" + encodeURIComponent(name) + "&backgroundColor=b6e3f4";
+        else session.user.image = "https://api.dicebear.com/9.x/avataaars/svg?seed=" + encodeURIComponent(name) + "&backgroundColor=c0aede";
+      }
       }
       return session;
     },

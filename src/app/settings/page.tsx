@@ -20,6 +20,11 @@ export default function SettingsPage() {
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [avatarColor, setAvatarColor] = useState("#6366f1");
+  const defaultAvatar = (name: string) => {
+    const initials = name.split(" ").map(n => n[0]).join("").slice(0,2);
+    return `<div style="background:${avatarColor};width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:18px">${initials}</div>`;
+  };
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   
   const router = useRouter();
