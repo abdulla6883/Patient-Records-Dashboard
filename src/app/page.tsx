@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 "use client";
 
 import { useState } from 'react';
@@ -10,6 +11,14 @@ import AddPatientModal from '@/components/AddPatientModal';
 import { api } from '@/services/api';
 
 export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
+  );
+}
+
+function DashboardContent() {
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
