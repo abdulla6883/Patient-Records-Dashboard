@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 
 import React, { useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -56,7 +57,7 @@ export default function MessagesPage() {
   useEffect(() => {
     fetchMessages();
     // Poll for new messages (incoming replies) every 2 seconds
-    const interval = setInterval(fetchMessages, 2000);
+    const interval = setInterval(fetchMessages, 5000);
     return () => clearInterval(interval);
   }, []);
   useEffect(() => { scrollToBottom(); }, [messages, activeChat]);
