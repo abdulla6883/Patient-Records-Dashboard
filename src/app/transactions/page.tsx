@@ -176,8 +176,8 @@ export default function TransactionsPage() {
   );
 }
 
-const SummaryCard = ({ title, value, change, icon, color }: { title: string, value: string, change: string, icon: React.ReactNode, color: string }) => (
-  <div className="card p-8 bg-white flex items-center justify-between hover:shadow-md transition-shadow">
+const SummaryCard = ({ title, value, change, icon, color, className }: { title: string, value: string, change: string, icon: React.ReactNode, color: string, className?: string }) => (
+  <div className={`card p-8 bg-white flex items-center justify-between hover:shadow-md transition-shadow ${className || ''}`}>
     <div className="flex flex-col">
       <span className="text-sm font-medium text-[#707070]">{title}</span>
       <span className="text-2xl font-extrabold text-[#072635] mt-1">{value}</span>
