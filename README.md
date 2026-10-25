@@ -46,7 +46,7 @@ npm install
 
 ### 3. Environment and Database Setup
 
-Copy `.env.example` to `.env`. Create a Neon PostgreSQL database and set `DATABASE_URL` to its pooled connection string and `DIRECT_URL` to its direct connection string. Set `AUTH_SECRET` to a generated secret, and provide Google OAuth and SMTP credentials for those features.
+Copy `.env.example` to `.env`. Local development uses SQLite, so no database account or connection string is needed. Set `AUTH_SECRET` to a generated secret. Google OAuth and SMTP credentials are optional and only needed for those features.
 
 ```bash
 # Apply database migrations
@@ -56,7 +56,7 @@ npm run db:deploy
 npx prisma db seed
 ```
 
-For Vercel, connect the Neon database and a **public** Vercel Blob store to the project. Add the environment variables from `.env.example`; the connected Blob store supplies Vercel's runtime credentials. Do not seed production with the demo credentials.
+The SQLite database is stored at `prisma/dev.db`. The demo seed is only for a fresh local database; it deletes existing patient and related records. The schema is configured for local SQLite and must be changed back to a hosted database provider before deploying to a serverless host such as Vercel. For Vercel uploads, connect a **public** Vercel Blob store and add the environment variables from `.env.example`; the connected Blob store supplies Vercel's runtime credentials.
 
 ### 4. Running the Development Server
 
